@@ -1,38 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/black">
+    android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/item_poster"
+        android:id="@+id/item_capa"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="7"
-        android:src="@drawable/poster"
-        android:scaleType="centerInside" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/capa" />
 
     <TextView
-        android:id="@+id/item_desc"
+        android:id="@+id/item_titulo"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:text="Bengal Tiger is an action-oriented film, where Mithun Chakraborty plays the role of Inspector Prashant Verma, who is always opposing the evil deeds of Shakti Kapoor's Rukavat Singh."
-        android:textColor="@android:color/white"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/item_capa"
+        android:background="#D8000000"
         android:gravity="center"
-        android:textAppearance="?android:textAppearanceSmall"
-        android:padding="5dp"/>
+        android:padding="5dp"
+        android:text="Capitão América"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
 
-    <RatingBar
-        android:id="@+id/item_avaliacao"
-        style="@android:style/Widget.Holo.RatingBar.Indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_gravity="center"
-        android:layout_marginBottom="5dp"
-        android:numStars="5"
-        android:rating="3" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/item_capa"
+        android:layout_centerHorizontal="true"
+        android:background="#D8000000"
+        android:padding="5dp">
 
-</LinearLayout>
+        <RatingBar
+            android:id="@+id/item_avaliacao"
+            style="@style/Widget.AppCompat.RatingBar.Indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:numStars="5"
+            android:rating="3" />
+
+    </FrameLayout>
+
+</RelativeLayout>
