@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -42,8 +41,6 @@ public class FilmeDetalheFragment extends Fragment {
 
         RatingBar avaliacao = (RatingBar) view.findViewById(R.id.item_avaliacao);
         avaliacao.setRating(itemFilme.getAvaliacao());
-
-        Button btnTrailer = (Button) view.findViewById(R.id.item_btn_trailer);
 
         return view;
     }
