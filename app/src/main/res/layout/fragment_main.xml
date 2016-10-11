@@ -7,6 +7,7 @@
     tools:context="br.com.androidpro.bollyfilmes.MainActivity">
 
     <ListView
+        style="@style/BollyFilmesListStyle"
         android:id="@+id/list_filmes"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
