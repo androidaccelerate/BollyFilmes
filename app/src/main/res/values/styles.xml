@@ -8,6 +8,15 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="BollyFilmesTheme" parent="AppTheme">
+        <item name="actionBarStyle">@style/ActionBar.Solid.BollyFilmes.NoTitle</item>
+    </style>
+    
+    <style name="ActionBar.Solid.BollyFilmes.NoTitle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="displayOptions">useLogo|showHome</item>
+        <item name="logo">@mipmap/ic_launcher</item>
+    </style>
+    
     <style name="BollyFilmesListStyle">
 
     </style>
