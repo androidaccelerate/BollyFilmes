@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="layout" name="fragment_filme_detalhe">@layout/fragment_filme_detalhe_wide</item>
+</resources>
