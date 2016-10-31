@@ -5,4 +5,34 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="detalhe_activity_label">Detalhe</string>
     <string name="settings_actiity_label">Configurações</string>
+
+
+    <!-- Preferencias de Ordem -->
+    <string name="prefs_ordem_label">Ordem</string>
+    <string name="prefs_ordem_key">ordem</string>
+
+    <string-array name="prefs_ordem_values">
+        <item>popular</item>
+        <item>top_rated</item>
+    </string-array>
+
+    <string-array name="prefs_ordem_entries">
+        <item>Populares</item>
+        <item>Melhores Avaliados</item>
+    </string-array>
+
+    <!-- Preferencias de Idioma -->
+    <string name="prefs_idioma_label">Idoma</string>
+    <string name="prefs_idioma_key">idioma</string>
+
+    <string-array name="prefs_idioma_values">
+        <item>en</item>
+        <item>pt-BR</item>
+    </string-array>
+
+    <string-array name="prefs_idioma_entries">
+        <item>Inglês</item>
+        <item>Português</item>
+    </string-array>
+
 </resources>

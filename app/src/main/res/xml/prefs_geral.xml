@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ListPreference
+        android:title="@string/prefs_ordem_label"
+        android:key="@string/prefs_ordem_key"
+        android:defaultValue="popular"
+        android:entryValues="@array/prefs_ordem_values"
+        android:entries="@array/prefs_ordem_entries" />
+
+    <ListPreference
+        android:title="@string/prefs_idioma_label"
+        android:key="@string/prefs_idioma_key"
+        android:defaultValue="pt-BR"
+        android:entryValues="@array/prefs_idioma_values"
+        android:entries="@array/prefs_idioma_entries" />
+
+</PreferenceScreen>
