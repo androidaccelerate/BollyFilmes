@@ -105,6 +105,7 @@ public class MainFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.menu_atualizar:
+                new FilmesAsyncTask().execute();
                 Toast.makeText(getContext(), "Atualizando os filmes...", Toast.LENGTH_LONG).show();
                 return true;
             default:

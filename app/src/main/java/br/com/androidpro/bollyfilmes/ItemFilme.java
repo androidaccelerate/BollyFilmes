@@ -39,8 +39,10 @@ public class ItemFilme implements Serializable {
 
     private String dataLancamento;
 
+    // http://image.tmdb.org/t/p/w185/IfB9hy4JH1eH6HEfIgIGORXi5h.jpg
     private String posterPath;
 
+    // http://image.tmdb.org/t/p/w185/4ynQYtSEuU5hyipcGkfD6ncwtwz.jpg
     private String capaPath;
 
     private float avaliacao;
@@ -63,6 +65,14 @@ public class ItemFilme implements Serializable {
         this.posterPath = jsonObject.getString("poster_path");
         this.capaPath = jsonObject.getString("backdrop_path");
         this.avaliacao = (float) jsonObject.getDouble("vote_average");
+    }
+
+    private String buildPath(String width, String path) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("http://image.tmdb.org/t/p/")
+                .append(width)
+                .append(path);
+        return  builder.toString();
     }
 
     public long getId() {
@@ -98,7 +108,7 @@ public class ItemFilme implements Serializable {
     }
 
     public String getPosterPath() {
-        return posterPath;
+        return buildPath("w500", posterPath);
     }
 
     public void setPosterPath(String posterPath) {
@@ -106,7 +116,7 @@ public class ItemFilme implements Serializable {
     }
 
     public String getCapaPath() {
-        return capaPath;
+        return buildPath("w780", capaPath);
     }
 
     public void setCapaPath(String capaPath) {
