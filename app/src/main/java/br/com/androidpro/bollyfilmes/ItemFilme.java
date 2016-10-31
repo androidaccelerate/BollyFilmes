@@ -1,13 +1,37 @@
 package br.com.androidpro.bollyfilmes;
 
 
-import android.net.Uri;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 
+/*{
+        "poster_path": "/IfB9hy4JH1eH6HEfIgIGORXi5h.jpg",
+        "adult": false,
+        "overview": "Jack Reacher must uncover the truth behind a major government conspiracy in order to clear his name. On the run as a fugitive from the law, Reacher uncovers a potential secret from his past that could change his life forever.",
+        "release_date": "2016-10-19",
+        "genre_ids": [
+        53,
+        28,
+        80,
+        18,
+        9648
+        ],
+        "id": 343611,
+        "original_title": "Jack Reacher: Never Go Back",
+        "original_language": "en",
+        "title": "Jack Reacher: Never Go Back",
+        "backdrop_path": "/4ynQYtSEuU5hyipcGkfD6ncwtwz.jpg",
+        "popularity": 33.793474,
+        "vote_count": 304,
+        "video": false,
+        "vote_average": 4.38
+}*/
+
 public class ItemFilme implements Serializable {
 
-    private String id;
+    private long id;
 
     private String titulo;
 
@@ -15,22 +39,37 @@ public class ItemFilme implements Serializable {
 
     private String dataLancamento;
 
-    private Uri imagem;
+    private String posterPath;
+
+    private String capaPath;
 
     private float avaliacao;
 
-    public ItemFilme(String titulo, String descricao, String dataLancamento, float avaliacao) {
+    public ItemFilme(long id, String titulo, String descricao, String dataLancamento, String posterPath, String capaPath, float avaliacao) {
+        this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
         this.dataLancamento = dataLancamento;
+        this.posterPath = posterPath;
+        this.capaPath = capaPath;
         this.avaliacao = avaliacao;
     }
 
-    public String getId() {
+    public ItemFilme(JSONObject jsonObject) throws JSONException {
+        this.id = jsonObject.getLong("id");
+        this.titulo = jsonObject.getString("title");
+        this.descricao = jsonObject.getString("overview");
+        this.dataLancamento = jsonObject.getString("release_date");
+        this.posterPath = jsonObject.getString("poster_path");
+        this.capaPath = jsonObject.getString("backdrop_path");
+        this.avaliacao = (float) jsonObject.getDouble("vote_average");
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -58,12 +97,20 @@ public class ItemFilme implements Serializable {
         this.dataLancamento = dataLancamento;
     }
 
-    public Uri getImagem() {
-        return imagem;
+    public String getPosterPath() {
+        return posterPath;
     }
 
-    public void setImagem(Uri imagem) {
-        this.imagem = imagem;
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    public String getCapaPath() {
+        return capaPath;
+    }
+
+    public void setCapaPath(String capaPath) {
+        this.capaPath = capaPath;
     }
 
     public float getAvaliacao() {
