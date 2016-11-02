@@ -24,6 +24,8 @@
     <!-- Preferencias de Idioma -->
     <string name="prefs_idioma_label">Idoma</string>
     <string name="prefs_idioma_key">idioma</string>
+    <string name="menu_atualizar_label">Atualizar</string>
+    <string name="menu_config_label">Configurações</string>
 
     <string-array name="prefs_idioma_values">
         <item>en</item>

@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_atualizar"
-        android:title="Atualizar"
+        android:title="@string/menu_atualizar_label"
+        android:showAsAction="never"
+        android:orderInCategory="100">
+    </item>
+
+    <item android:id="@+id/menu_config"
+        android:title="@string/menu_config_label"
         android:showAsAction="never"
         android:orderInCategory="100">
     </item>
