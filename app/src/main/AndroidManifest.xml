@@ -40,6 +40,11 @@
                 android:value=".MainActivity"/>
         </activity>
 
+        <provider
+            android:authorities="br.com.androidpro.bollyfilmes"
+            android:name=".data.FilmesProdiver"
+            android:exported="false" />
+        
     </application>
 
 </manifest>
