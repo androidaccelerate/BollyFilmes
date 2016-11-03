@@ -2,13 +2,29 @@ package br.com.androidpro.bollyfilmes.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
 public class FilmesProdiver extends ContentProvider {
 
+    private static final UriMatcher URI_MATCHER = buildUriMatcher();
+
     private FilmesDBHelper dbHelper;
+
+    private static final int FILME = 100;
+
+    private static final int FILME_ID = 101;
+
+    private static UriMatcher buildUriMatcher() {
+        final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+        uriMatcher.addURI(FilmesContract.CONTENT_AUTHORITY, FilmesContract.PATH_FILMES, FILME);
+        uriMatcher.addURI(FilmesContract.CONTENT_AUTHORITY, FilmesContract.PATH_FILMES + "/#", FILME_ID);
+
+        return uriMatcher;
+    }
 
     @Override
     public boolean onCreate() {
