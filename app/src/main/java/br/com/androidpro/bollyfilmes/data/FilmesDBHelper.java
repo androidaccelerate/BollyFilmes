@@ -22,7 +22,7 @@ public class FilmesDBHelper extends SQLiteOpenHelper {
                 FilmesContract.FilmeEntry.COLUMN_DESCRICAO + " TEXT NOT NULL, " +
                 FilmesContract.FilmeEntry.COLUMN_POSTER_PATH + " TEXT NOT NULL, " +
                 FilmesContract.FilmeEntry.COLUMN_CAPA_PATH + " TEXT NOT NULL, " +
-                FilmesContract.FilmeEntry.COLUMN_AVALIACAO + " REAL, " +
+                FilmesContract.FilmeEntry.COLUMN_AVALIACAO + " REAL" +
                 ");";
 
         db.execSQL(sqlTableFilmes);
