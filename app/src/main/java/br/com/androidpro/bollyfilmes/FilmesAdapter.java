@@ -2,17 +2,18 @@ package br.com.androidpro.bollyfilmes;
 
 
 import android.content.Context;
+import android.database.Cursor;
+import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import br.com.androidpro.bollyfilmes.data.FilmesContract;
 
-public class FilmesAdapter extends ArrayAdapter<ItemFilme> {
+public class FilmesAdapter extends CursorAdapter {
 
     private static final int VIEW_TYPE_DESTAQUE = 0;
 
@@ -20,8 +21,8 @@ public class FilmesAdapter extends ArrayAdapter<ItemFilme> {
 
     private boolean useFilmeDestaque = false;
 
-    public FilmesAdapter(Context context, ArrayList<ItemFilme> filmes) {
-        super(context, 0, filmes);
+    public FilmesAdapter(Context context, Cursor cursor) {
+        super(context, cursor, 0);
     }
 
     public static class ItemFilmeHolder {
@@ -30,6 +31,7 @@ public class FilmesAdapter extends ArrayAdapter<ItemFilme> {
         TextView dataLancamento;
         RatingBar avaliacao;
         ImageView poster;
+        ImageView capa;
 
         public ItemFilmeHolder(View view) {
             titulo = (TextView) view.findViewById(R.id.item_titulo);
@@ -37,54 +39,62 @@ public class FilmesAdapter extends ArrayAdapter<ItemFilme> {
             dataLancamento = (TextView) view.findViewById(R.id.item_data);
             avaliacao = (RatingBar) view.findViewById(R.id.item_avaliacao);
             poster = (ImageView) view.findViewById(R.id.item_poster);
+            capa = (ImageView) view.findViewById(R.id.item_capa);
         }
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
 
-        int viewType = getItemViewType(position);
-        ItemFilme filme = getItem(position);
-        View itemView = convertView;
+        int viewType = getItemViewType(cursor.getPosition());
+        int layoutId = -1;
 
         switch (viewType) {
             case VIEW_TYPE_DESTAQUE: {
-                itemView = LayoutInflater.from(getContext()).inflate(R.layout.item_filme_destaque, parent, false);
-
-                TextView titulo = (TextView) itemView.findViewById(R.id.item_titulo);
-                titulo.setText(filme.getTitulo());
-
-                RatingBar avaliacao = (RatingBar) itemView.findViewById(R.id.item_avaliacao);
-                avaliacao.setRating(filme.getAvaliacao());
-
-                ImageView capa = (ImageView) itemView.findViewById(R.id.item_capa);
-                new DownloadImageTask(capa).execute(filme.getCapaPath());
-
+                layoutId = R.layout.item_filme_destaque;
                 break;
             }
             case VIEW_TYPE_ITEM: {
-                itemView = LayoutInflater.from(getContext()).inflate(R.layout.item_filme, parent, false);
-
-                ItemFilmeHolder holder;
-                if (itemView.getTag() == null) {
-                    holder = new ItemFilmeHolder(itemView);
-                    itemView.setTag(holder);
-                } else {
-                    holder = (ItemFilmeHolder) itemView.getTag();
-                }
-
-                holder.titulo.setText(filme.getTitulo());
-                holder.desc.setText(filme.getDescricao());
-                holder.dataLancamento.setText(filme.getDataLancamento());
-                holder.avaliacao.setRating(filme.getAvaliacao());
-
-                new DownloadImageTask(holder.poster).execute(filme.getPosterPath());
-
+                layoutId = R.layout.item_filme;
                 break;
             }
         }
 
-        return itemView;
+        View view = LayoutInflater.from(context).inflate(layoutId, parent, false);
+
+        ItemFilmeHolder holder = new ItemFilmeHolder(view);
+        view.setTag(holder);
+
+        return view;
+    }
+
+    @Override
+    public void bindView(View view, Context context, Cursor cursor) {
+
+        ItemFilmeHolder holder = (ItemFilmeHolder) view.getTag();
+        int viewType = getItemViewType(cursor.getPosition());
+
+        int tituloIndex = cursor.getColumnIndex(FilmesContract.FilmeEntry.COLUMN_TITULO);
+        int descricaoIndex = cursor.getColumnIndex(FilmesContract.FilmeEntry.COLUMN_DESCRICAO);
+        int posterIndex = cursor.getColumnIndex(FilmesContract.FilmeEntry.COLUMN_POSTER_PATH);
+        int capaIndex = cursor.getColumnIndex(FilmesContract.FilmeEntry.COLUMN_CAPA_PATH);
+        int avaliacaoIndex = cursor.getColumnIndex(FilmesContract.FilmeEntry.COLUMN_AVALIACAO);
+        int dataLancamentoIndex = cursor.getColumnIndex(FilmesContract.FilmeEntry.COLUMN_DATA_LANCAMENTO);
+
+        switch (viewType) {
+            case VIEW_TYPE_DESTAQUE: {
+                holder.titulo.setText(cursor.getString(tituloIndex));
+                holder.avaliacao.setRating(cursor.getFloat(avaliacaoIndex));
+                new DownloadImageTask(holder.capa).execute(cursor.getString(capaIndex));
+            }
+            case VIEW_TYPE_ITEM: {
+                holder.titulo.setText(cursor.getString(tituloIndex));
+                holder.desc.setText(cursor.getString(descricaoIndex));
+                holder.dataLancamento.setText(cursor.getColumnName(dataLancamentoIndex));
+                holder.avaliacao.setRating(cursor.getFloat(avaliacaoIndex));
+                new DownloadImageTask(holder.poster).execute(cursor.getString(posterIndex));
+            }
+        }
     }
 
     @Override

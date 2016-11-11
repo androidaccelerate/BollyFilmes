@@ -58,7 +58,7 @@ public class MainFragment extends Fragment {
 
         final ArrayList<ItemFilme> arrayList = new ArrayList<>();
 
-        adapter = new FilmesAdapter(getContext(), arrayList);
+        adapter = new FilmesAdapter(getContext(), null);
         adapter.setUseFilmeDestaque(useFilmeDestaque);
 
         list.setAdapter(adapter);
@@ -202,6 +202,7 @@ public class MainFragment extends Fragment {
                 values.put(FilmesContract.FilmeEntry.COLUMN_POSTER_PATH, itemFilme.getPosterPath());
                 values.put(FilmesContract.FilmeEntry.COLUMN_CAPA_PATH, itemFilme.getCapaPath());
                 values.put(FilmesContract.FilmeEntry.COLUMN_AVALIACAO, itemFilme.getAvaliacao());
+                values.put(FilmesContract.FilmeEntry.COLUMN_DATA_LANCAMENTO, itemFilme.getDataLancamento());
 
                 String where = FilmesContract.FilmeEntry._ID + "=?";
                 String[] whereValues = new String[] {String.valueOf(itemFilme.getId())};
@@ -212,9 +213,9 @@ public class MainFragment extends Fragment {
                     getContext().getContentResolver().insert(FilmesContract.FilmeEntry.CONTENT_URI, values);
                 }
             }
-
-            adapter.clear();
-            adapter.addAll(itemFilmes);
+//
+//            adapter.clear();
+//            adapter.addAll(itemFilmes);
             adapter.notifyDataSetChanged();
         }
     }
