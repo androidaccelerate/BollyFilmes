@@ -4,6 +4,7 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
@@ -36,28 +37,101 @@ public class FilmesProdiver extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return null;
+
+        SQLiteDatabase readableDatabase = dbHelper.getReadableDatabase();
+
+        Cursor cursor;
+
+        switch (URI_MATCHER.match(uri)) {
+            case FILME:
+                cursor = readableDatabase.query(FilmesContract.FilmeEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+
+                break;
+            case FILME_ID:
+                selection = FilmesContract.FilmeEntry._ID + "=?";
+                selectionArgs = new String[] {String.valueOf(FilmesContract.FilmeEntry.getIdFromUri(uri))};
+
+                cursor = readableDatabase.query(FilmesContract.FilmeEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+
+                break;
+            default:
+                throw new IllegalArgumentException("Uri não identificada: " + uri);
+        }
+
+        return cursor;
     }
 
     @Nullable
     @Override
     public String getType(Uri uri) {
-        return null;
+        switch (URI_MATCHER.match(uri)) {
+            case FILME:
+                return FilmesContract.FilmeEntry.CONTENT_TYPE;
+            case FILME_ID:
+                return FilmesContract.FilmeEntry.CONTENT_ITEM_TYPE;
+            default:
+                throw new IllegalArgumentException("Uri não identificada: " + uri);
+        }
     }
 
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        return null;
+
+        SQLiteDatabase writableDatabase = dbHelper.getWritableDatabase();
+
+        long id;
+        switch (URI_MATCHER.match(uri)) {
+            case FILME:
+                id = writableDatabase.insert(FilmesContract.FilmeEntry.TABLE_NAME, null, values);
+
+                if (id == -1) {
+                    return null;
+                }
+
+                break;
+            default:
+                throw new IllegalArgumentException("Uri não identificada: " + uri);
+        }
+
+        return FilmesContract.FilmeEntry.buildUriForFilmes(id);
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+
+        SQLiteDatabase writableDatabase = dbHelper.getWritableDatabase();
+
+        switch (URI_MATCHER.match(uri)) {
+            case FILME:
+                return writableDatabase.delete(FilmesContract.FilmeEntry.TABLE_NAME, selection, selectionArgs);
+
+            case FILME_ID:
+                selection = FilmesContract.FilmeEntry._ID + "=?";
+                selectionArgs = new String[] {String.valueOf(FilmesContract.FilmeEntry.getIdFromUri(uri))};
+
+                return writableDatabase.delete(FilmesContract.FilmeEntry.TABLE_NAME, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Uri não identificada: " + uri);
+        }
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+
+        SQLiteDatabase writableDatabase = dbHelper.getWritableDatabase();
+
+        switch (URI_MATCHER.match(uri)) {
+            case FILME:
+                return writableDatabase.update(FilmesContract.FilmeEntry.TABLE_NAME, values, selection, selectionArgs);
+
+            case FILME_ID:
+                selection = FilmesContract.FilmeEntry._ID + "=?";
+                selectionArgs = new String[] {String.valueOf(FilmesContract.FilmeEntry.getIdFromUri(uri))};
+
+                return writableDatabase.update(FilmesContract.FilmeEntry.TABLE_NAME, values, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Uri não identificada: " + uri);
+        }
     }
 }
