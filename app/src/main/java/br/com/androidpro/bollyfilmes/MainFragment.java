@@ -3,7 +3,6 @@ package br.com.androidpro.bollyfilmes;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.androidpro.bollyfilmes.data.FilmesContract;
-import br.com.androidpro.bollyfilmes.data.FilmesDBHelper;
 
 public class MainFragment extends Fragment {
 
@@ -43,8 +41,6 @@ public class MainFragment extends Fragment {
     private FilmesAdapter adapter;
 
     private boolean useFilmeDestaque = false;
-
-    private FilmesDBHelper dbHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,8 +76,6 @@ public class MainFragment extends Fragment {
         if(savedInstanceState != null && savedInstanceState.containsKey(KEY_POSICAO)) {
             posicaoItem = savedInstanceState.getInt(KEY_POSICAO);
         }
-
-        dbHelper = new FilmesDBHelper(getContext());
 
         new FilmesAsyncTask().execute();
 
@@ -200,8 +194,6 @@ public class MainFragment extends Fragment {
         @Override
         protected void onPostExecute(List<ItemFilme> itemFilmes) {
 
-            SQLiteDatabase writableDatabase = dbHelper.getWritableDatabase();
-
             for (ItemFilme itemFilme : itemFilmes) {
                 ContentValues values = new ContentValues();
                 values.put(FilmesContract.FilmeEntry._ID, itemFilme.getId());
@@ -214,10 +206,10 @@ public class MainFragment extends Fragment {
                 String where = FilmesContract.FilmeEntry._ID + "=?";
                 String[] whereValues = new String[] {String.valueOf(itemFilme.getId())};
 
-                int update = writableDatabase.update(FilmesContract.FilmeEntry.TABLE_NAME, values, where, whereValues);
+                int update = getContext().getContentResolver().update(FilmesContract.FilmeEntry.CONTENT_URI, values, where, whereValues);
 
                 if (update == 0) {
-                    writableDatabase.insert(FilmesContract.FilmeEntry.TABLE_NAME, null, values);
+                    getContext().getContentResolver().insert(FilmesContract.FilmeEntry.CONTENT_URI, values);
                 }
             }
 
