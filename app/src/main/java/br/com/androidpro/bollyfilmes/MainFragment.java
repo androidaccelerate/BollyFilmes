@@ -3,12 +3,16 @@ package br.com.androidpro.bollyfilmes;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,7 +34,7 @@ import java.util.List;
 
 import br.com.androidpro.bollyfilmes.data.FilmesContract;
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private int posicaoItem = ListView.INVALID_POSITION;
 
@@ -41,6 +45,8 @@ public class MainFragment extends Fragment {
     private FilmesAdapter adapter;
 
     private boolean useFilmeDestaque = false;
+
+    private static final int FILMES_LOADER = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,6 +82,8 @@ public class MainFragment extends Fragment {
         if(savedInstanceState != null && savedInstanceState.containsKey(KEY_POSICAO)) {
             posicaoItem = savedInstanceState.getInt(KEY_POSICAO);
         }
+
+        getLoaderManager().initLoader(FILMES_LOADER, null, this);
 
         new FilmesAsyncTask().execute();
 
@@ -127,6 +135,32 @@ public class MainFragment extends Fragment {
         if (adapter != null) {
             adapter.setUseFilmeDestaque(useFilmeDestaque);
         }
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        String[] projection = {
+                FilmesContract.FilmeEntry._ID,
+                FilmesContract.FilmeEntry.COLUMN_TITULO,
+                FilmesContract.FilmeEntry.COLUMN_DESCRICAO,
+                FilmesContract.FilmeEntry.COLUMN_POSTER_PATH,
+                FilmesContract.FilmeEntry.COLUMN_CAPA_PATH,
+                FilmesContract.FilmeEntry.COLUMN_AVALIACAO,
+                FilmesContract.FilmeEntry.COLUMN_DATA_LANCAMENTO
+        };
+
+        return new CursorLoader(getContext(), FilmesContract.FilmeEntry.CONTENT_URI, projection, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        adapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        adapter.swapCursor(null);
     }
 
     public class FilmesAsyncTask extends AsyncTask<Void, Void, List<ItemFilme>> {
