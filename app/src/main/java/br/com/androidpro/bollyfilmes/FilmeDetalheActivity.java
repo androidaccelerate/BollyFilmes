@@ -1,6 +1,7 @@
 package br.com.androidpro.bollyfilmes;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -14,14 +15,14 @@ public class FilmeDetalheActivity extends AppCompatActivity {
         setContentView(R.layout.activity_filme_detalhe);
 
         Intent intent = getIntent();
-        ItemFilme itemFilme = (ItemFilme) intent.getSerializableExtra(MainActivity.KEY_FILME);
+        Uri uri = intent.getData();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         FilmeDetalheFragment fragment = new FilmeDetalheFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(MainActivity.KEY_FILME, itemFilme);
+        bundle.putParcelable(MainActivity.FILME_DETALHE_URI, uri);
         fragment.setArguments(bundle);
         fragmentTransaction.add(R.id.fragment_filme_detalhe, fragment);
 

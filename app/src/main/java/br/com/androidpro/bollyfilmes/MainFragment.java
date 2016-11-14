@@ -1,5 +1,6 @@
 package br.com.androidpro.bollyfilmes;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,7 +30,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import br.com.androidpro.bollyfilmes.data.FilmesContract;
@@ -48,6 +48,8 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private static final int FILMES_LOADER = 0;
 
+    private ProgressDialog progressDialog;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,8 +64,6 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
         list = (ListView) view.findViewById(R.id.list_filmes);
 
-        final ArrayList<ItemFilme> arrayList = new ArrayList<>();
-
         adapter = new FilmesAdapter(getContext(), null);
         adapter.setUseFilmeDestaque(useFilmeDestaque);
 
@@ -72,9 +72,9 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ItemFilme itemFilme = arrayList.get(position);
+                Uri uri = FilmesContract.FilmeEntry.buildUriForFilmes(id);
                 Callback callback = (Callback) getActivity();
-                callback.onItemSelected(itemFilme);
+                callback.onItemSelected(uri);
                 posicaoItem = position;
             }
         });
@@ -82,6 +82,11 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         if(savedInstanceState != null && savedInstanceState.containsKey(KEY_POSICAO)) {
             posicaoItem = savedInstanceState.getInt(KEY_POSICAO);
         }
+
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setTitle(getString(R.string.pd_carregando_titulo));
+        progressDialog.setMessage(getString(R.string.pd_carregando_mensagem));
+        progressDialog.setCancelable(false);
 
         getLoaderManager().initLoader(FILMES_LOADER, null, this);
 
@@ -140,6 +145,8 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
+        progressDialog.show();
+
         String[] projection = {
                 FilmesContract.FilmeEntry._ID,
                 FilmesContract.FilmeEntry.COLUMN_TITULO,
@@ -156,6 +163,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         adapter.swapCursor(data);
+        progressDialog.dismiss();
     }
 
     @Override
@@ -173,8 +181,8 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
             BufferedReader reader = null;
 
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-            String ordem = preferences.getString(getString(R.string.prefs_ordem_key), "");
-            String idioma = preferences.getString(getString(R.string.prefs_idioma_key), "");
+            String ordem = preferences.getString(getString(R.string.prefs_ordem_key), "popular");
+            String idioma = preferences.getString(getString(R.string.prefs_idioma_key), "pt-BR");
 
             try {
                 String urlBase = "https://api.themoviedb.org/3/movie/" + ordem + "?";
@@ -228,6 +236,10 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         @Override
         protected void onPostExecute(List<ItemFilme> itemFilmes) {
 
+            if (itemFilmes == null) {
+                return;
+            }
+
             for (ItemFilme itemFilme : itemFilmes) {
                 ContentValues values = new ContentValues();
                 values.put(FilmesContract.FilmeEntry._ID, itemFilme.getId());
@@ -238,24 +250,17 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                 values.put(FilmesContract.FilmeEntry.COLUMN_AVALIACAO, itemFilme.getAvaliacao());
                 values.put(FilmesContract.FilmeEntry.COLUMN_DATA_LANCAMENTO, itemFilme.getDataLancamento());
 
-                String where = FilmesContract.FilmeEntry._ID + "=?";
-                String[] whereValues = new String[] {String.valueOf(itemFilme.getId())};
-
-                int update = getContext().getContentResolver().update(FilmesContract.FilmeEntry.CONTENT_URI, values, where, whereValues);
+                int update = getContext().getContentResolver().update(FilmesContract.FilmeEntry.buildUriForFilmes(itemFilme.getId()), values, null, null);
 
                 if (update == 0) {
                     getContext().getContentResolver().insert(FilmesContract.FilmeEntry.CONTENT_URI, values);
                 }
             }
-//
-//            adapter.clear();
-//            adapter.addAll(itemFilmes);
-            adapter.notifyDataSetChanged();
         }
     }
 
     public interface Callback {
-        void onItemSelected(ItemFilme itemFilme);
+        void onItemSelected(Uri uri);
     }
 
 }

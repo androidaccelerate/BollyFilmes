@@ -26,6 +26,8 @@
     <string name="prefs_idioma_key">idioma</string>
     <string name="menu_atualizar_label">Atualizar</string>
     <string name="menu_config_label">Configurações</string>
+    <string name="pd_carregando_titulo">Carregando...</string>
+    <string name="pd_carregando_mensagem">Por favor, aguarde!</string>
 
     <string-array name="prefs_idioma_values">
         <item>en</item>
