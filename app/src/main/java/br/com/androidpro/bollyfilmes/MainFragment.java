@@ -96,6 +96,15 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            list.smoothScrollToPosition(savedInstanceState.getInt(KEY_POSICAO));
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
 
         if(posicaoItem != ListView.INVALID_POSITION) {
@@ -103,15 +112,6 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
         }
 
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-
-        if (posicaoItem != ListView.INVALID_POSITION && list != null) {
-            list.smoothScrollToPosition(posicaoItem);
-        }
     }
 
     @Override
@@ -143,6 +143,13 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        getLoaderManager().restartLoader(FILMES_LOADER, null, this);
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         progressDialog.show();
@@ -154,10 +161,22 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                 FilmesContract.FilmeEntry.COLUMN_POSTER_PATH,
                 FilmesContract.FilmeEntry.COLUMN_CAPA_PATH,
                 FilmesContract.FilmeEntry.COLUMN_AVALIACAO,
-                FilmesContract.FilmeEntry.COLUMN_DATA_LANCAMENTO
+                FilmesContract.FilmeEntry.COLUMN_DATA_LANCAMENTO,
+                FilmesContract.FilmeEntry.COLUMN_POPULARIDADE
         };
 
-        return new CursorLoader(getContext(), FilmesContract.FilmeEntry.CONTENT_URI, projection, null, null, null);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String ordem = preferences.getString(getString(R.string.prefs_ordem_key), "popular");
+        String popularValue = getResources().getStringArray(R.array.prefs_ordem_values)[0];
+
+        String orderBy = null;
+        if (ordem.equals(popularValue)) {
+            orderBy = FilmesContract.FilmeEntry.COLUMN_POPULARIDADE + " DESC";
+        } else {
+            orderBy = FilmesContract.FilmeEntry.COLUMN_AVALIACAO + " DESC";
+        }
+
+        return new CursorLoader(getContext(), FilmesContract.FilmeEntry.CONTENT_URI, projection, null, null, orderBy);
     }
 
     @Override
@@ -249,6 +268,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
                 values.put(FilmesContract.FilmeEntry.COLUMN_CAPA_PATH, itemFilme.getCapaPath());
                 values.put(FilmesContract.FilmeEntry.COLUMN_AVALIACAO, itemFilme.getAvaliacao());
                 values.put(FilmesContract.FilmeEntry.COLUMN_DATA_LANCAMENTO, itemFilme.getDataLancamento());
+                values.put(FilmesContract.FilmeEntry.COLUMN_POPULARIDADE, itemFilme.getPopularidade());
 
                 int update = getContext().getContentResolver().update(FilmesContract.FilmeEntry.buildUriForFilmes(itemFilme.getId()), values, null, null);
 
