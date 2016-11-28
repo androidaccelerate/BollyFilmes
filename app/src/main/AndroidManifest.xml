@@ -44,6 +44,8 @@
             android:authorities="br.com.androidpro.bollyfilmes"
             android:name=".data.FilmesProdiver"
             android:exported="false" />
+
+        <service android:name=".service.FilmesIntentService" />
         
     </application>
 
