@@ -46,7 +46,8 @@
         <provider
             android:authorities="@string/content_authority"
             android:name=".data.FilmesProdiver"
-            android:exported="false" />
+            android:exported="false"
+            android:syncable="true" />
 
         <service android:name=".service.FilmesIntentService" />
 
