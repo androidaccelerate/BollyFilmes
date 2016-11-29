@@ -39,4 +39,8 @@
         <item>Português</item>
     </string-array>
 
+    <!-- Account Manager -->
+    <string name="sync_account_type">bollyfilmes.androidpro.com.br</string>
+    <string name="content_authority">br.com.androidpro.bollyfilmes</string>
+
 </resources>
