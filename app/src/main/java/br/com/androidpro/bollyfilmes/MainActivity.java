@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
+import br.com.androidpro.bollyfilmes.sync.FilmesSyncAdapter;
+
 public class MainActivity extends AppCompatActivity implements MainFragment.Callback {
 
     public static final String FILME_DETALHE_URI = "FILME";
@@ -33,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
 
         MainFragment mainFragment = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.main_fragment);
         mainFragment.setUseFilmeDestaque(!isTablet);
+
+        FilmesSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override

@@ -49,8 +49,6 @@
             android:exported="false"
             android:syncable="true" />
 
-        <service android:name=".service.FilmesIntentService" />
-
         <service android:name=".sync.FilmesAuthenticatosService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
