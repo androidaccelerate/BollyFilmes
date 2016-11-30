@@ -125,6 +125,16 @@ public class FilmesSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     public void notify(ItemFilme itemFilme) {
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String notifyPrefKey = getContext().getString(R.string.prefs_notif_filmes_key);
+        String notifyDefault = getContext().getString(R.string.prefs_notif_filmes_default);
+        boolean notifyPrefs = sharedPreferences.getBoolean(notifyPrefKey, Boolean.parseBoolean(notifyDefault));
+
+        if(!notifyPrefs) {
+            return;
+        }
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext()).
                 setSmallIcon(R.mipmap.ic_launcher).
                 setContentTitle(itemFilme.getTitulo()).

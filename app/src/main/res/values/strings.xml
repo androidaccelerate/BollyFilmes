@@ -2,7 +2,6 @@
     <string name="app_name">Bolly Filmes</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="detalhe_activity_label">Detalhe</string>
     <string name="settings_actiity_label">Configurações</string>
 
@@ -24,10 +23,6 @@
     <!-- Preferencias de Idioma -->
     <string name="prefs_idioma_label">Idoma</string>
     <string name="prefs_idioma_key">idioma</string>
-    <string name="menu_atualizar_label">Atualizar</string>
-    <string name="menu_config_label">Configurações</string>
-    <string name="pd_carregando_titulo">Carregando...</string>
-    <string name="pd_carregando_mensagem">Por favor, aguarde!</string>
 
     <string-array name="prefs_idioma_values">
         <item>en</item>
@@ -42,5 +37,20 @@
     <!-- Account Manager -->
     <string name="sync_account_type">bollyfilmes.androidpro.com.br</string>
     <string name="content_authority">br.com.androidpro.bollyfilmes</string>
+
+    <!-- Menu -->
+    <string name="menu_atualizar_label">Atualizar</string>
+    <string name="menu_config_label">Configurações</string>
+
+    <!-- ProgressDialog de Loading -->
+    <string name="pd_carregando_titulo">Carregando...</string>
+    <string name="pd_carregando_mensagem">Por favor, aguarde!</string>
+
+    <!-- Preferencias de Notificação -->
+    <string name="prefs_notif_filmes_titulo">Notificações</string>
+    <string name="prefs_notif_filmes_key">pref_notify_filmes</string>
+    <string name="prefs_notif_filmes_off">Desabilitado</string>
+    <string name="prefs_notif_filmes_on">Habilitado</string>
+    <string name="prefs_notif_filmes_default">true</string>
 
 </resources>
