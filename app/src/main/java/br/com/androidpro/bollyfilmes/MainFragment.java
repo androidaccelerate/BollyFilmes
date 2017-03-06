@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -174,6 +175,16 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         adapter.swapCursor(data);
         progressDialog.dismiss();
+        if (!useFilmeDestaque) {
+            list.setSelection(0);
+            list.setItemChecked(0, true);
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    list.performItemClick(list.getSelectedView(), 0, adapter.getItemId(0));
+                }
+            });
+        }
     }
 
     @Override

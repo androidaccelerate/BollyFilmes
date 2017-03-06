@@ -69,6 +69,8 @@ public class FilmeDetalheFragment extends Fragment implements LoaderManager.Load
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
+        if (filmeUri == null) return null;
+
         String[] projection = {
                 FilmesContract.FilmeEntry._ID,
                 FilmesContract.FilmeEntry.COLUMN_TITULO,
